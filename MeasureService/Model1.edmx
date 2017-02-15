@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MeasuringDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+        <EntityType Name="Locations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Measurements">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Value" Type="float" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="MeasuringStation_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MeasuringStations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Location_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_LocationMeasuringStation">
+          <End Role="Locations" Type="Self.Locations" Multiplicity="1" />
+          <End Role="MeasuringStations" Type="Self.MeasuringStations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Locations">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MeasuringStations">
+              <PropertyRef Name="Location_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeasuringStationMeasurement">
+          <End Role="MeasuringStations" Type="Self.MeasuringStations" Multiplicity="1" />
+          <End Role="Measurements" Type="Self.Measurements" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasuringStations">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Measurements">
+              <PropertyRef Name="MeasuringStation_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MeasuringDBModelStoreContainer">
+          <EntitySet Name="Locations" EntityType="Self.Locations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Measurements" EntityType="Self.Measurements" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeasuringStations" EntityType="Self.MeasuringStations" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_LocationMeasuringStation" Association="Self.FK_LocationMeasuringStation">
+            <End Role="Locations" EntitySet="Locations" />
+            <End Role="MeasuringStations" EntitySet="MeasuringStations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeasuringStationMeasurement" Association="Self.FK_MeasuringStationMeasurement">
+            <End Role="MeasuringStations" EntitySet="MeasuringStations" />
+            <End Role="Measurements" EntitySet="Measurements" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MeasuringDBModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+        <EntityContainer Name="MeasuringDBEntities" >
+          <EntitySet Name="Locations" EntityType="MeasuringDBModel.Location" />
+          <EntitySet Name="Measurements" EntityType="MeasuringDBModel.Measurement" />
+          <EntitySet Name="MeasuringStations" EntityType="MeasuringDBModel.MeasuringStation" />
+          <AssociationSet Name="FK_LocationMeasuringStation" Association="MeasuringDBModel.FK_LocationMeasuringStation">
+            <End Role="Location" EntitySet="Locations" />
+            <End Role="MeasuringStation" EntitySet="MeasuringStations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeasuringStationMeasurement" Association="MeasuringDBModel.FK_MeasuringStationMeasurement">
+            <End Role="MeasuringStation" EntitySet="MeasuringStations" />
+            <End Role="Measurement" EntitySet="Measurements" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MeasuringStations" Relationship="MeasuringDBModel.FK_LocationMeasuringStation" FromRole="Location" ToRole="MeasuringStation" />
+        </EntityType>
+        <EntityType Name="Measurement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="Double" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="MeasuringStation" Relationship="MeasuringDBModel.FK_MeasuringStationMeasurement" FromRole="Measurement" ToRole="MeasuringStation" />
+        </EntityType>
+        <EntityType Name="MeasuringStation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Location" Relationship="MeasuringDBModel.FK_LocationMeasuringStation" FromRole="MeasuringStation" ToRole="Location" />
+          <NavigationProperty Name="Measurements" Relationship="MeasuringDBModel.FK_MeasuringStationMeasurement" FromRole="MeasuringStation" ToRole="Measurement" />
+        </EntityType>
+        <Association Name="FK_LocationMeasuringStation">
+          <End Type="MeasuringDBModel.Location" Role="Location" Multiplicity="1" />
+          <End Type="MeasuringDBModel.MeasuringStation" Role="MeasuringStation" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_MeasuringStationMeasurement">
+          <End Type="MeasuringDBModel.MeasuringStation" Role="MeasuringStation" Multiplicity="1" />
+          <End Type="MeasuringDBModel.Measurement" Role="Measurement" Multiplicity="*" />
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+  <EntityContainerMapping StorageEntityContainer="MeasuringDBModelStoreContainer" CdmEntityContainer="MeasuringDBEntities">
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="MeasuringDBModel.Location">
+              <MappingFragment StoreEntitySet="Locations">
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Measurements">
+            <EntityTypeMapping TypeName="MeasuringDBModel.Measurement">
+              <MappingFragment StoreEntitySet="Measurements">
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeasuringStations">
+            <EntityTypeMapping TypeName="MeasuringDBModel.MeasuringStation">
+              <MappingFragment StoreEntitySet="MeasuringStations">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FK_LocationMeasuringStation" TypeName="MeasuringDBModel.FK_LocationMeasuringStation" StoreEntitySet="MeasuringStations">
+            <EndProperty Name="MeasuringStation">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+            <EndProperty Name="Location">
+              <ScalarProperty Name="Id" ColumnName="Location_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_MeasuringStationMeasurement" TypeName="MeasuringDBModel.FK_MeasuringStationMeasurement" StoreEntitySet="Measurements">
+            <EndProperty Name="Measurement">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+            <EndProperty Name="MeasuringStation">
+              <ScalarProperty Name="Id" ColumnName="MeasuringStation_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2007/06/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Model1" >
+        <EntityTypeShape EntityType="MeasuringDBModel.Location" Width="1.5" PointX="0.75" PointY="1.125" />
+        <EntityTypeShape EntityType="MeasuringDBModel.Measurement" Width="1.5" PointX="5.25" PointY="0.875" />
+        <EntityTypeShape EntityType="MeasuringDBModel.MeasuringStation" Width="1.5" PointX="3" PointY="1" />
+        <AssociationConnector Association="MeasuringDBModel.FK_LocationMeasuringStation" />
+        <AssociationConnector Association="MeasuringDBModel.FK_MeasuringStationMeasurement" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
