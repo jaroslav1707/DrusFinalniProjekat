@@ -6,7 +6,7 @@ Nova verzija projekta iz DRUS-a
 Uputstvo:
 
 1. Na prvom mestu je potrebno kreirati bazu podataka. Skript fajl za kreiranje baze podataka se nalazi u samom projektu
-MeasureService/Model1.edmx.sql. ali i u fajlu baza_podataka.txt.
+MeasureService/Model1.edmx.sql. ali i u fajlu baza_podataka_skripta.sql.
 
 2. Da bi se pokrenuo program prvo je potrebno pokrenuti HostService projekat.
 
